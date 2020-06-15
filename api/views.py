@@ -45,7 +45,7 @@ class GithubContribs(View):
         try:
             data = response.get('user').get('contributionsCollection').get('contributionCalendar')
         except:
-            return JsonResponse(
+            return http.JsonResponse(
                 { 'message': 'error fetching from github'},
                 status=500
             )
