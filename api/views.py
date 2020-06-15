@@ -2,10 +2,13 @@ from django.shortcuts import render
 from django.views import View
 from django import http
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
 
+@method_decorator(cache_page(60 * 1), name='dispatch')
 class GithubContribs(View):
     """Fetches, format and return github contrib history by week."""
     def get(self, request):
