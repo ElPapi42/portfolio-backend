@@ -9,18 +9,19 @@ from gql.transport.requests import RequestsHTTPTransport
 class GithubContribs(View):
     """Fetches, format and return github contrib history by week."""
     def get(self, request):
-        transport=RequestsHTTPTransport(
-            url='https://api.github.com/graphql',
-            headers={'Authorization': 'bearer {token}'.format(token=settings.GITHUB_TOKEN)},
-            verify=False,
-            retries=3,
-        )
 
+        # Instaciate a graphql client
         graph_client = Client(
-            transport=transport,
+            transport=RequestsHTTPTransport(
+                url='https://api.github.com/graphql',
+                headers={'Authorization': 'bearer {token}'.format(token=settings.GITHUB_TOKEN)},
+                verify=False,
+                retries=3,
+            ),
             fetch_schema_from_transport=True,
         )
 
+        # Builds the query for get the raw contribution data
         query = gql('''
             query { 
                 user(login: "elpapi42") {
@@ -49,6 +50,7 @@ class GithubContribs(View):
                 status=500
             )
 
+        # Extracts and transforms relevant information from the returned data
         total = data.get('totalContributions')
         start = data.get('weeks')[0].get('contributionDays')[0].get('date')
         end = data.get('weeks')[-1].get('contributionDays')[-1].get('date')
