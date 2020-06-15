@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import pathlib
+
+from dotenv import load_dotenv
+
+# Load .env vars
+dotenv_path = pathlib.Path('.').parent/'.env'
+load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b$k5#-n28e^v3h3!ddzwh7v0+%2b3*nn3=b*#(6^h)7y39atkab'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# Github access token
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
