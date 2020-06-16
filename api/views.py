@@ -8,7 +8,8 @@ from gql import gql, Client
 from gql.transport.requests import RequestsHTTPTransport
 
 
-@method_decorator(cache_page(60 * 1), name='dispatch')
+# Cache this for one day
+@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class GithubContribs(View):
     """Fetches, format and return github contrib history by week."""
     def get(self, request):
