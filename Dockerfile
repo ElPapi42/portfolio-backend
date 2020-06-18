@@ -1,12 +1,12 @@
 FROM python:3.8.3-slim
 LABEL maintainer="Whitman Bohorquez"
 
-RUN mkdir portfolio && cd portfolio
+WORKDIR /backend
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY / /
+COPY . .
 RUN python setup.py install
 
-CMD [ "uvicorn", "portfolio.asgi:application", "--reload" ]
+ENTRYPOINT [ "gunicorn", "--bind", "0.0.0.0:8000", "--reload", "portfolio.wsgi" ]

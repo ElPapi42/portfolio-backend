@@ -3,3 +3,4 @@ gql>=3.0.0a0
 python-dotenv
 pytest-django
 uvicorn
+gunicorn
