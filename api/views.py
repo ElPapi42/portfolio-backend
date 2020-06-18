@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.cache import cache
 from django.views import View
 from django import http
 from django.conf import settings
@@ -45,14 +46,7 @@ class GithubContribs(View):
         ''')
 
         response = graph_client.execute(query)
-
-        try:
-            data = response.get('user').get('contributionsCollection').get('contributionCalendar')
-        except:
-            return http.JsonResponse(
-                { 'message': 'error fetching from github'},
-                status=500
-            )
+        data = response.get('user').get('contributionsCollection').get('contributionCalendar')
 
         # Extracts and transforms relevant information from the returned data
         total = data.get('totalContributions')
