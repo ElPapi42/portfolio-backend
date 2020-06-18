@@ -28,4 +28,3 @@ jobs:
       run: |
         export GITHUB_TOKEN=${{ secrets.GH_TOKEN }}
         export SECRET_KEY=${{ secrets.SECRET_KEY }}
-        pytest
