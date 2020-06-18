@@ -4,11 +4,9 @@ import pytest
 import gql
 from django.urls import reverse
 from django.test import override_settings
+from django.core.cache import cache
 
 
-@override_settings(CACHES = {
-    'default': { 'BACKEND': 'django.core.cache.backends.dummy.DummyCache' }
-})
 def test_contribs(client, monkeypatch):
     # Monckeypatch grapjql query
     class monkey_client():
@@ -51,22 +49,5 @@ def test_contribs(client, monkeypatch):
         'contribs': [32]
     }
 
-@override_settings(CACHES = {
-    'default': { 'BACKEND': 'django.core.cache.backends.dummy.DummyCache' }
-})
-def test_contribs_bad_response(client, monkeypatch):
-    # Monckeypatch grapjql query
-    class monkey_client():
-        def __init__(self, transport, fetch_schema_from_transport):
-            pass
-        def execute(self, query):
-            return {
-                'message': 'github generic error'
-            }
-    monkeypatch.setattr(gql, 'Client', monkey_client)
-
-    response = client.get(reverse('api-contribs'))
-
-    assert response.status_code == 500
 
 
