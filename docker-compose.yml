@@ -15,7 +15,7 @@ services:
         ports:
             - 8000:8000
         volumes:
-            - .:/portfolio
+            - .:/backend
         depends_on:
             - portfolio-redis
         container_name: portfolio-backend
