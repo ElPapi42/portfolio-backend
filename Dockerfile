@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN python setup.py install
 
-ENTRYPOINT [ "gunicorn", "--bind", "0.0.0.0:8000", "--reload", "portfolio.wsgi" ]
+ENTRYPOINT [ "uvicorn", "--host", "0.0.0.0", "--port", "8000", "--reload", "portfolio.asgi:application" ]
