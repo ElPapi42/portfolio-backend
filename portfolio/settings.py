@@ -35,6 +35,7 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CORS_ORIGIN_ALLOW_ALL = True
 ALLOWED_HOSTS = [
     '*',
 ]
