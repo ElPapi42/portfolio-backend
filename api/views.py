@@ -12,7 +12,7 @@ from gql.transport.requests import RequestsHTTPTransport
 # Cache this for one day
 @method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class GithubContribs(View):
-    """Fetches, format and return github contrib history by week."""
+    """Fetches, format and return github contrib history by month."""
     def get(self, request):
 
         # Instaciate a graphql client
