@@ -39,6 +39,9 @@ class GithubContribs(View):
                                     date
                                 }
                             }
+                            months {
+                                name
+                            }
                         }
                     }
                 }
@@ -59,16 +62,24 @@ class GithubContribs(View):
             for day in week.get('contributionDays'):
                 day_contribs = day.get('contributionCount')
 
+                # If the day is part of the same month, add to it,
+                # else, create a new entry for the new month
                 if (self.get_month(day.get('date')) == last_month):
                     contribs[-1] += day_contribs
                 else:
                     contribs.append(day_contribs)
                     last_month = self.get_month(day.get('date'))
 
+        # Extract the name of the months in order
+        months = []
+        for month in data.get('months'):
+            months.append(month.get('name'))
+
         return http.JsonResponse(
             {
                 'total': total,
                 'contribs': contribs,
+                'months': months,
             }
         )
 
