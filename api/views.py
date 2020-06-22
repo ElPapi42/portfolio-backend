@@ -50,22 +50,33 @@ class GithubContribs(View):
 
         # Extracts and transforms relevant information from the returned data
         total = data.get('totalContributions')
-        start = data.get('weeks')[0].get('contributionDays')[0].get('date')
-        end = data.get('weeks')[-1].get('contributionDays')[-1].get('date')
 
-        # Extract the total contribs per week
+        # Extract the total contribs per month
         contribs = []
+        last_month = None
         for week in data.get('weeks'):
             week_total = 0
             for day in week.get('contributionDays'):
-                week_total += day.get('contributionCount')
-            contribs.append(week_total)
+                day_contribs = day.get('contributionCount')
+
+                if (self.get_month(day.get('date')) == last_month):
+                    contribs[-1] += day_contribs
+                else:
+                    contribs.append(day_contribs)
+                    last_month = self.get_month(day.get('date'))
 
         return http.JsonResponse(
             {
                 'total': total,
-                'start': start,
-                'end': end,
                 'contribs': contribs,
             }
         )
+
+    def get_month(self, date):
+        """
+        Extract the month from the supplied date.
+
+        Args:
+            date (str): From where to extract the month number.
+        """
+        return date.split('-')[1]
