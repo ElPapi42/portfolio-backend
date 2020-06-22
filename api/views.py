@@ -12,7 +12,7 @@ from gql.transport.requests import RequestsHTTPTransport
 # Cache this for one day
 @method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class GithubContribs(View):
-    """Fetches, format and return github contrib history by week."""
+    """Fetches, format and return github contrib history by month."""
     def get(self, request):
 
         # Instaciate a graphql client
@@ -39,6 +39,9 @@ class GithubContribs(View):
                                     date
                                 }
                             }
+                            months {
+                                name
+                            }
                         }
                     }
                 }
@@ -50,22 +53,41 @@ class GithubContribs(View):
 
         # Extracts and transforms relevant information from the returned data
         total = data.get('totalContributions')
-        start = data.get('weeks')[0].get('contributionDays')[0].get('date')
-        end = data.get('weeks')[-1].get('contributionDays')[-1].get('date')
 
-        # Extract the total contribs per week
+        # Extract the total contribs per month
         contribs = []
+        last_month = None
         for week in data.get('weeks'):
             week_total = 0
             for day in week.get('contributionDays'):
-                week_total += day.get('contributionCount')
-            contribs.append(week_total)
+                day_contribs = day.get('contributionCount')
+
+                # If the day is part of the same month, add to it,
+                # else, create a new entry for the new month
+                if (self.get_month(day.get('date')) == last_month):
+                    contribs[-1] += day_contribs
+                else:
+                    contribs.append(day_contribs)
+                    last_month = self.get_month(day.get('date'))
+
+        # Extract the name of the months in order
+        months = []
+        for month in data.get('months'):
+            months.append(month.get('name'))
 
         return http.JsonResponse(
             {
                 'total': total,
-                'start': start,
-                'end': end,
                 'contribs': contribs,
+                'months': months,
             }
         )
+
+    def get_month(self, date):
+        """
+        Extract the month from the supplied date.
+
+        Args:
+            date (str): From where to extract the month number.
+        """
+        return date.split('-')[1]

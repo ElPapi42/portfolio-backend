@@ -32,7 +32,12 @@ def test_contribs(client, monkeypatch):
                                         }
                                     ]
                                 }
-                            ]
+                            ],
+                            'months': [
+                                {
+                                'name': 'Jun'
+                                },
+                            ],
                         }
                     }
                 }
@@ -44,9 +49,8 @@ def test_contribs(client, monkeypatch):
     assert response.status_code == 200
     assert json.loads(response.content) == {
         'total': 1538,
-        'start': '2020-06-14T00:00:00.000+00:00',
-        'end': '2020-06-15T00:00:00.000+00:00',
-        'contribs': [32]
+        'contribs': [32],
+        'months': ['Jun']
     }
 
 
