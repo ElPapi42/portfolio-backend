@@ -1,4 +1,3 @@
-from django.core.cache import cache
 from django.views import View
 from django import http
 from django.utils.decorators import method_decorator
