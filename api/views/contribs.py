@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.core.cache import cache
 from django.views import View
 from django import http
