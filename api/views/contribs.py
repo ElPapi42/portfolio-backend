@@ -3,7 +3,7 @@ from django import http
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from gql import gql
-
+'''
 from api.graphql import client as graph_client
 
 
@@ -13,7 +13,7 @@ class GithubContribs(View):
     """Fetches, format and return github contrib history by month."""
     def get(self, request):
         # Builds the query for get the raw contribution data
-        query = gql('''
+        query = gql(
             query { 
                 user(login: "elpapi42") {
                     contributionsCollection {
@@ -32,7 +32,7 @@ class GithubContribs(View):
                     }
                 }
             }
-        ''')
+        )
 
         response = graph_client.execute(query)
         data = response.get('user').get('contributionsCollection').get('contributionCalendar')
@@ -77,3 +77,4 @@ class GithubContribs(View):
             date (str): From where to extract the month number.
         """
         return date.split('-')[1]
+'''
