@@ -1,42 +1,50 @@
 import json
+import requests
 
 from django.urls import reverse
-"""
-from api.graphql import client as graph_client
 
 
-def test_contribs(client, monkeypatch):
-    # Monckeypatch grapjql query
-    def mock_execute(query):
+class MockResponse():
+    def json(self):
         return {
-            'user': {
-                'contributionsCollection': {
-                    'contributionCalendar': {
-                        'totalContributions': 1538,
-                        'weeks': [
-                            {
-                                'contributionDays': [
-                                    {
-                                        'contributionCount': 29,
-                                        'date': '2020-06-14T00:00:00.000+00:00'
-                                    },
-                                    {
-                                        'contributionCount': 3,
-                                        'date': '2020-06-15T00:00:00.000+00:00'
-                                    }
-                                ]
-                            }
-                        ],
-                        'months': [
-                            {
-                            'name': 'Jun'
-                            },
-                        ],
+            'data': {
+                'user': {
+                    'contributionsCollection': {
+                        'contributionCalendar': {
+                            'totalContributions': 1538,
+                            'weeks': [
+                                {
+                                    'contributionDays': [
+                                        {
+                                            'contributionCount': 29,
+                                            'date': '2020-06-14T00:00:00.000+00:00'
+                                        },
+                                        {
+                                            'contributionCount': 3,
+                                            'date': '2020-06-15T00:00:00.000+00:00'
+                                        }
+                                    ]
+                                }
+                            ],
+                            'months': [
+                                {
+                                'name': 'Jun'
+                                },
+                            ],
+                        }
                     }
                 }
             }
         }
-    monkeypatch.setattr(graph_client, 'execute', mock_execute)
+
+
+def mock_post(*args, **kwargs):
+        return MockResponse()
+
+
+def test_contribs(client, monkeypatch):
+    # Monckeypatch grapjql query        
+    monkeypatch.setattr(requests, 'post', mock_post)
 
     response = client.get(reverse('api-contribs'))
 
@@ -46,4 +54,3 @@ def test_contribs(client, monkeypatch):
         'contribs': [32],
         'months': ['Jun']
     }
-"""
