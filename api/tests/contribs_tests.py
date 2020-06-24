@@ -1,6 +1,5 @@
 import json
 
-import gql
 from django.urls import reverse
 """
 from api.graphql import client as graph_client

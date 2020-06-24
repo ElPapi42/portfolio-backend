@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 
 
 # Cache this for one day
-#@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
+@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
 class GithubRepos(View):
     """Fetches, format and and return pinned repos."""
     def get(self, request):

@@ -1,10 +1,10 @@
+import requests
+
+from django.conf import settings
 from django.views import View
 from django import http
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from gql import gql
-'''
-from api.graphql import client as graph_client
 
 
 # Cache this for one day
@@ -13,7 +13,7 @@ class GithubContribs(View):
     """Fetches, format and return github contrib history by month."""
     def get(self, request):
         # Builds the query for get the raw contribution data
-        query = gql(
+        query = '''
             query { 
                 user(login: "elpapi42") {
                     contributionsCollection {
@@ -32,10 +32,15 @@ class GithubContribs(View):
                     }
                 }
             }
-        )
+        '''
 
-        response = graph_client.execute(query)
-        data = response.get('user').get('contributionsCollection').get('contributionCalendar')
+        response = requests.post(
+            url='https://api.github.com/graphql',
+            headers={'Authorization': 'bearer {token}'.format(token=settings.GITHUB_TOKEN)},
+            json={'query': query},
+        ).json()
+
+        data = response.get('data').get('user').get('contributionsCollection').get('contributionCalendar')
 
         # Extracts and transforms relevant information from the returned data
         total = data.get('totalContributions')
@@ -77,4 +82,3 @@ class GithubContribs(View):
             date (str): From where to extract the month number.
         """
         return date.split('-')[1]
-'''

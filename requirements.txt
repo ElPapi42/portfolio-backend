@@ -1,7 +1,7 @@
 django>=3.0.7
-gql>=3.0.0a0
 python-dotenv
 pytest-django
 django-redis
 django-cors-headers
+requests
 uvicorn
