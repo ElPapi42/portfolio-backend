@@ -1,20 +1,13 @@
 import json
+import requests
 
-import pytest
-import gql
 from django.urls import reverse
-from django.test import override_settings
-from django.core.cache import cache
 
 
-def test_contribs(client, monkeypatch):
-    # Monckeypatch grapjql query
-    class monkey_client():
-        def __init__(self, transport, fetch_schema_from_transport):
-            pass
-
-        def execute(self, query):
-            return {
+class MockResponse():
+    def json(self):
+        return {
+            'data': {
                 'user': {
                     'contributionsCollection': {
                         'contributionCalendar': {
@@ -42,7 +35,16 @@ def test_contribs(client, monkeypatch):
                     }
                 }
             }
-    monkeypatch.setattr(gql, 'Client', monkey_client)
+        }
+
+
+def mock_post(*args, **kwargs):
+        return MockResponse()
+
+
+def test_contribs(client, monkeypatch):
+    # Monckeypatch grapjql query        
+    monkeypatch.setattr(requests, 'post', mock_post)
 
     response = client.get(reverse('api-contribs'))
 
@@ -52,6 +54,3 @@ def test_contribs(client, monkeypatch):
         'contribs': [32],
         'months': ['Jun']
     }
-
-
-
