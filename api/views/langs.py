@@ -7,8 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
 
-# Cache this for one day
-#@method_decorator(cache_page(24 * 60 * 60), name='dispatch')
+# Cache this for seven days
+@method_decorator(cache_page(7 * 24 * 60 * 60), name='dispatch')
 class TopLangs(View):
     """Fetches, format and and return top user languages."""
     def get(self, request):
@@ -49,8 +49,16 @@ class TopLangs(View):
                 else:
                     user_langs[name] = 1
 
+        # Sort the languages from most ocurrences to less
+        user_langs = {lang_name: rep for lang_name, rep in sorted(
+            user_langs.items(),
+            key=lambda ocurr: ocurr[1],
+            reverse=True
+        )}
+
         return http.JsonResponse(
             {
-                'langs': user_langs
+                'langs': list(user_langs)[0:7],
+                'ocurrences': list(user_langs.values())[0:7],
             }
         )
