@@ -45,7 +45,9 @@ class TopLangs(View):
             for lang in repo_langs:
                 name = lang.get('name')
                 if (user_langs.get(name)):
-                    user_langs[name] += 1
+                    # This if prevents the values going over 10
+                    if (user_langs[name] < 10):
+                        user_langs[name] += 1
                 else:
                     user_langs[name] = 1
 
