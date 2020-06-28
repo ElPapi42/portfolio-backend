@@ -4,4 +4,4 @@ pytest-django
 django-redis
 django-cors-headers
 requests
-uvicorn
+uvicorn[watchgodreload]
